@@ -1,0 +1,18 @@
+{
+  "id": "fsrs-spaced-repetition",
+  "name": "Spaced Repetition (FSRS)",
+  "version": "1.0.0",
+  "description": "State-of-the-art Free Spaced Repetition Scheduler (FSRS) flashcard review system built right inside Flint.",
+  "author": "Yuliet Li",
+  "minAppVersion": "0.4.0",
+  "category": "Productivity",
+  "tags": [
+    "fsrs",
+    "flashcards",
+    "study",
+    "spaced-repetition",
+    "learning"
+  ],
+  "icon": "brain-02",
+  "repoUrl": "https://github.com/yvliet/fsrs-spaced-repetition"
+}
