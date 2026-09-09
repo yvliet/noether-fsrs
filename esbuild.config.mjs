@@ -34,6 +34,8 @@ const buildOptions = {
     '@hugeicons/react',
     '@hugeicons/core-free-icons',
     'zod',
+    'ts-fsrs',
+    'canvas-confetti',
     'flint',
     'flint/sdk',
     '@flint',
