@@ -5,7 +5,12 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isWatch = process.argv.includes('--watch');
-const srcDir = path.resolve(__dirname, '../../src');
+const possibleSrcDirs = [
+  path.resolve(__dirname, '../../src'),
+  path.resolve(__dirname, '../Flint/src'),
+  path.resolve(__dirname, '../src'),
+];
+const srcDir = possibleSrcDirs.find((d) => fs.existsSync(d)) || path.resolve(__dirname, '../../src');
 
 const buildOptions = {
   entryPoints: [path.join(__dirname, 'FsrsExtension.tsx')],
@@ -20,10 +25,22 @@ const buildOptions = {
     'react/jsx-runtime',
     'react/jsx-dev-runtime',
     'react-dom',
+    'react-dom/client',
+    'clsx',
+    'tailwind-merge',
+    'zustand',
+    'zustand/vanilla',
+    '@hugeicons/*',
+    '@hugeicons/react',
+    '@hugeicons/core-free-icons',
     'zod',
     'flint',
+    'flint/sdk',
+    '@flint',
+    '@flint/core',
     '@flint/api',
-    '@flint/sdk'
+    '@flint/sdk',
+    'flint-sdk'
   ],
   alias: {
     '@': srcDir,
