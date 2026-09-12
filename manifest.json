@@ -1,9 +1,10 @@
 {
-  "id": "fsrs-spaced-repetition",
+  "id": "noether-fsrs",
   "name": "Spaced Repetition (FSRS)",
   "version": "1.0.0",
-  "description": "State-of-the-art Free Spaced Repetition Scheduler (FSRS) flashcard review system built right inside Flint.",
+  "description": "State-of-the-art Free Spaced Repetition Scheduler (FSRS) flashcard review system built right inside Noether.",
   "author": "Yuliet Li",
+  "authorUrl": "https://github.com/yvliet",
   "minAppVersion": "0.4.0",
   "category": "Productivity",
   "tags": [
@@ -13,6 +14,14 @@
     "spaced-repetition",
     "learning"
   ],
-  "icon": "brain-02",
-  "repoUrl": "https://github.com/yvliet/fsrs-spaced-repetition"
+  "icon": {
+    "name": "brain-02",
+    "type": "gradient",
+    "gradientColors": [
+      "#ec4899",
+      "#be185d"
+    ],
+    "gradientDirection": "135deg"
+  },
+  "repoUrl": "https://github.com/yvliet/noether-fsrs"
 }
