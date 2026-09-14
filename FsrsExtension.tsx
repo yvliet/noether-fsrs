@@ -14,7 +14,7 @@
 import React, { useState, useEffect } from 'react';
 import { Extension } from '@/core/extensions/Extension';
 import { ExtensionManifest, McpToolResult } from '@/core/extensions/types';
-import { FlintApp } from '@/core/app/FlintApp';
+import { NoetherApp } from '@/core/app/NoetherApp';
 import { Brain02Icon } from '@/components/common/Icons';
 import { fsrsReadme } from './readme';
 import {
@@ -41,9 +41,9 @@ const LazyStudyReviewModal = React.lazy(() =>
 );
 
 export const FSRS_MANIFEST: ExtensionManifest = {
-  id: 'fsrs-spaced-repetition',
+  id: 'noether-fsrs',
   name: 'Spaced Repetition (FSRS)',
-  version: '1.0.0',
+  version: '1.1.0',
   description: 'Modern FSRS-4.5 spaced repetition flashcard review engine embedded directly in notes.',
   author: 'Yuliet Li',
   isCore: false,
@@ -51,7 +51,45 @@ export const FSRS_MANIFEST: ExtensionManifest = {
   readme: fsrsReadme,
 };
 
-const FsrsDueBadgeItem: React.FC<{ app: FlintApp }> = ({ app }) => {
+const FsrsDocCardPill: React.FC<{ docId: string; app: NoetherApp }> = ({ docId, app }) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let mounted = true;
+    getCardsForDocument(docId).then((cards) => {
+      if (mounted) setCount(cards.length);
+    });
+    const onUpdated = () => {
+      getCardsForDocument(docId).then((cards) => {
+        if (mounted) setCount(cards.length);
+      });
+    };
+    window.addEventListener('noether:fsrs-updated', onUpdated);
+    window.addEventListener('flint:fsrs-updated', onUpdated);
+    return () => {
+      mounted = false;
+      window.removeEventListener('noether:fsrs-updated', onUpdated);
+      window.removeEventListener('flint:fsrs-updated', onUpdated);
+    };
+  }, [docId]);
+
+  if (count <= 0) return null;
+  return (
+    <span
+      onClick={(e) => {
+        e.stopPropagation();
+        app.events.emit('editor:action', { action: 'open-fsrs-review', documentId: docId });
+        window.dispatchEvent(new CustomEvent('noether:open-fsrs-review', { detail: { documentId: docId } }));
+      }}
+      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--noether-btn-hover-bg)] text-[var(--noether-text-primary)] border border-[var(--noether-border-subtle)] cursor-pointer select-none hover:bg-[var(--noether-btn-active-bg)]"
+      title={`${count} flashcard${count === 1 ? '' : 's'} in note (click to study)`}
+    >
+      <Brain02Icon size={11} className="text-pink-500" />
+      <span>{count}</span>
+    </span>
+  );
+};
+
+const FsrsDueBadgeItem: React.FC<{ app: NoetherApp }> = ({ app }) => {
   const [dueCount, setDueCount] = useState<number>(0);
 
   useEffect(() => {
@@ -103,7 +141,7 @@ const FsrsDueBadgeItem: React.FC<{ app: FlintApp }> = ({ app }) => {
 };
 
 export class FsrsExtension extends Extension {
-  constructor(app: FlintApp, manifest: ExtensionManifest = FSRS_MANIFEST) {
+  constructor(app: NoetherApp, manifest: ExtensionManifest = FSRS_MANIFEST) {
     super(app, manifest);
   }
 
@@ -116,6 +154,7 @@ export class FsrsExtension extends Extension {
     this.onEvent('document:deleted', ({ id }) => {
       deleteCardsForDocument(id);
       if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('noether:fsrs-updated'));
         window.dispatchEvent(new CustomEvent('flint:fsrs-updated'));
       }
     });
@@ -151,6 +190,7 @@ export class FsrsExtension extends Extension {
       'Review flashcards (Ctrl+Shift+R)',
       (app) => {
         app.events.emit('editor:action', { action: 'open-fsrs-review' });
+        window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
         window.dispatchEvent(new CustomEvent('flint:open-fsrs-review'));
       },
       70
@@ -179,6 +219,7 @@ export class FsrsExtension extends Extension {
       hotkey: 'Ctrl+Shift+R',
       action: (app) => {
         app.events.emit('editor:action', { action: 'open-fsrs-review' });
+        window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
         window.dispatchEvent(new CustomEvent('flint:open-fsrs-review'));
       },
     });
@@ -238,9 +279,93 @@ export class FsrsExtension extends Extension {
       order: 10,
     });
 
+    // 8. Register Omnibox Search Providers (fsrs: / cards:)
+    this.registerSearchProvider({
+      id: 'fsrs-cards',
+      name: 'Flashcards',
+      prefix: 'fsrs:',
+      placeholder: 'Search flashcard questions...',
+      prefixOnly: true,
+      search: async (query) => {
+        const q = query.toLowerCase().trim();
+        const cards = await getAllCards();
+        return cards
+          .filter((c) => !q || (c.front && c.front.toLowerCase().includes(q)) || (c.back && c.back.toLowerCase().includes(q)))
+          .slice(0, 30)
+          .map((c) => ({
+            id: `fsrs:card:${c.id}`,
+            title: c.front,
+            description: `${c.card_type} card · ${c.document_title || 'Document'}`,
+            icon: <Brain02Icon size={14} className="text-pink-500" />,
+            category: 'Flashcards',
+            onSelect: async () => {
+              if (c.document_id) {
+                await this.app.workspace.openTab(c.document_id);
+              }
+            },
+          }));
+      },
+    });
+
+    this.registerSearchProvider({
+      id: 'fsrs-cards-alias',
+      name: 'Flashcards',
+      prefix: 'cards:',
+      placeholder: 'Search flashcard questions...',
+      prefixOnly: true,
+      search: (query, ctx) => {
+        const p = this.app.omnibox.getProvider('noether-fsrs:fsrs-cards');
+        return p ? p.search(query, ctx) : [];
+      },
+    });
+
+    // 9. Register Tab Context Menu Action
+    this.registerTabContextMenuAction({
+      id: 'review-note-cards',
+      title: 'Review Flashcards in Note',
+      icon: <Brain02Icon size={14} />,
+      section: 'actions',
+      order: 35,
+      isVisible: (ctx) => Boolean(ctx.doc),
+      onClick: (ctx) => {
+        if (ctx.doc) {
+          this.app.events.emit('editor:action', { action: 'open-fsrs-review', documentId: ctx.doc.id });
+          window.dispatchEvent(new CustomEvent('noether:open-fsrs-review', { detail: { documentId: ctx.doc.id } }));
+          window.dispatchEvent(new CustomEvent('flint:open-fsrs-review', { detail: { documentId: ctx.doc.id } }));
+        }
+      },
+    });
+
+    // 10. Register Document Title Decorator
+    this.registerDocumentTitleDecorator({
+      id: 'fsrs-card-pill',
+      matches: (ctx) => Boolean(ctx.doc),
+      renderSuffix: (ctx) => {
+        if (!ctx.doc) return null;
+        return <FsrsDocCardPill docId={ctx.doc.id} app={this.app} />;
+      },
+    });
+
+    // 11. Register Canvas Custom Card Renderer via EventBus
+    this.app.events.emit('canvas:register-card-renderer', {
+      id: 'fsrs-flashcard-card',
+      matches: (ctx: any) => ctx.node?.type === 'flashcard' || ctx.doc?.doc_type === 'flashcard',
+      render: (ctx: any) => (
+        <div className="p-3 bg-[var(--noether-bg-card)] border border-[var(--noether-border-subtle)] rounded-lg text-xs font-sans select-none">
+          <div className="flex items-center gap-1.5 font-medium text-[var(--noether-text-primary)] mb-1">
+            <Brain02Icon size={13} className="text-pink-500" />
+            <span>{ctx.node?.title || ctx.doc?.title || 'Flashcard'}</span>
+          </div>
+          <div className="text-[var(--noether-text-secondary)]">
+            {ctx.contentJson || 'Interactive Flashcard'}
+          </div>
+        </div>
+      ),
+    });
+
     // ── MCP Tools Registration ──
 
-    // 8. Tool: fsrs_get_due_cards
+    // 12. Tool: fsrs_get_due_cards
     this.registerTool({
       name: 'get_due_cards',
       description: 'Get all flashcards currently due for spaced repetition review, with optional document filter.',
@@ -254,7 +379,7 @@ export class FsrsExtension extends Extension {
           },
         },
       },
-      handler: async (args: Record<string, unknown>, _app: FlintApp): Promise<McpToolResult> => {
+      handler: async (args: Record<string, unknown>, _app: NoetherApp): Promise<McpToolResult> => {
         try {
           const documentId = args.documentId as string | undefined;
           let cards = await getDueCards();

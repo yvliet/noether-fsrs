@@ -1,7 +1,7 @@
 {
-  "name": "fsrs-spaced-repetition",
-  "version": "1.0.0",
-  "description": "State-of-the-art Free Spaced Repetition Scheduler (FSRS) flashcard review system built right inside Flint.",
+  "name": "noether-fsrs",
+  "version": "1.1.0",
+  "description": "State-of-the-art Free Spaced Repetition Scheduler (FSRS) flashcard review system built right inside Noether.",
   "main": "dist/main.js",
   "scripts": {
     "build": "node esbuild.config.mjs",
@@ -9,8 +9,8 @@
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
-    "flint",
-    "flint-extension",
+    "noether",
+    "noether-extension",
     "fsrs",
     "flashcards",
     "study",
@@ -21,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yvliet/fsrs-spaced-repetition.git"
+    "url": "https://github.com/yvliet/noether-fsrs.git"
   },
   "devDependencies": {
     "@types/react": "^18.3.18",

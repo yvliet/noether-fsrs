@@ -7,7 +7,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const isWatch = process.argv.includes('--watch');
 const possibleSrcDirs = [
   path.resolve(__dirname, '../../src'),
-  path.resolve(__dirname, '../Flint/src'),
+  path.resolve(__dirname, '../noether/src'),
+  path.resolve('c:/Users/sultan haikal/Downloads/noether/src'),
   path.resolve(__dirname, '../src'),
 ];
 const srcDir = possibleSrcDirs.find((d) => fs.existsSync(d)) || path.resolve(__dirname, '../../src');

@@ -15,20 +15,20 @@ import { getSchedulingOptions, SchedulingOption } from './engine';
 import { useFsrsSettings } from './fsrsSettings';
 
 const FLASHCARD_STYLES = `
-  .flint-plugin-flashcard-scene {
+  .noether-extension-flashcard-scene, .flint-plugin-flashcard-scene {
     perspective: 1000px;
   }
-  .flint-plugin-flashcard-inner {
+  .noether-extension-flashcard-inner, .flint-plugin-flashcard-inner {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .flint-plugin-flashcard-inner.is-flipped {
+  .noether-extension-flashcard-inner.is-flipped, .flint-plugin-flashcard-inner.is-flipped {
     transform: rotateY(180deg);
   }
-  .flint-plugin-flashcard-face {
+  .noether-extension-flashcard-face, .flint-plugin-flashcard-face {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -36,8 +36,8 @@ const FLASHCARD_STYLES = `
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     border-radius: 12px;
-    background-color: var(--flint-bg-card);
-    border: 1px solid var(--flint-border-strong);
+    background-color: var(--noether-bg-card, var(--flint-bg-card, #1c1c1c));
+    border: 1px solid var(--noether-border-base, var(--flint-border-strong, #333));
     box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@ const FLASHCARD_STYLES = `
     padding: 26px 28px;
     overflow-y: auto;
   }
-  .flint-plugin-flashcard-back {
+  .noether-extension-flashcard-back, .flint-plugin-flashcard-back {
     transform: rotateY(180deg);
   }
 `;
@@ -78,8 +78,12 @@ export const StudyReviewModal: React.FC = React.memo(() => {
 
   useEffect(() => {
     const handleOpen = () => setIsReviewModalOpen(true);
+    window.addEventListener('noether:open-fsrs-review', handleOpen);
     window.addEventListener('flint:open-fsrs-review', handleOpen);
-    return () => window.removeEventListener('flint:open-fsrs-review', handleOpen);
+    return () => {
+      window.removeEventListener('noether:open-fsrs-review', handleOpen);
+      window.removeEventListener('flint:open-fsrs-review', handleOpen);
+    };
   }, [setIsReviewModalOpen]);
 
   const currentCard = dueCards[currentIndex];
