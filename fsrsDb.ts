@@ -3,7 +3,7 @@
  * @description
  * Isolated database persistence module for the FSRS Spaced Repetition extension.
  * Automatically initializes dynamic SQLite tables and indexes upon demand,
- * ensuring Flint native core requires zero hardcoded knowledge of FSRS schemas.
+ * ensuring Noether native core requires zero hardcoded knowledge of FSRS schemas.
  */
 
 import { dbAdapter } from '@/lib/db/adapter';
@@ -43,7 +43,7 @@ export async function initFsrsTables(): Promise<void> {
     await dbAdapter.execute(`CREATE INDEX IF NOT EXISTS idx_fsrs_doc_id ON fsrs_cards(document_id);`);
     isInitialized = true;
   } catch (err) {
-    console.error('[Flint FSRS] Failed to initialize FSRS tables:', err);
+    console.error('[Noether FSRS] Failed to initialize FSRS tables:', err);
   }
 }
 
@@ -57,7 +57,7 @@ export async function getDueCards(): Promise<FSRSCardRecord[]> {
     );
     return rows;
   } catch (err) {
-    console.error('[Flint FSRS] Error fetching due cards:', err);
+    console.error('[Noether FSRS] Error fetching due cards:', err);
     return [];
   }
 }
@@ -106,7 +106,7 @@ export async function deleteCardsForDocument(documentId: string): Promise<void> 
   try {
     await dbAdapter.execute(`DELETE FROM fsrs_cards WHERE document_id = ?`, [documentId]);
   } catch (err) {
-    console.error('[Flint FSRS] Error deleting cards for document:', err);
+    console.error('[Noether FSRS] Error deleting cards for document:', err);
   }
 }
 
@@ -132,7 +132,7 @@ export async function updateCardState(card: FSRSCardRecord): Promise<void> {
       ]
     );
   } catch (err) {
-    console.error('[Flint FSRS] Error updating card state:', err);
+    console.error('[Noether FSRS] Error updating card state:', err);
   }
 }
 
@@ -186,7 +186,7 @@ export async function saveCardsForDocument(
       );
     }
   } catch (err) {
-    console.error('[Flint FSRS] Error saving cards for document:', err);
+    console.error('[Noether FSRS] Error saving cards for document:', err);
   }
 }
 
@@ -209,7 +209,7 @@ export async function syncDocumentCards(
       if (!rows.length || rows[0].is_folder) {
         await deleteCardsForDocument(documentId);
         if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('flint:fsrs-updated'));
+          window.dispatchEvent(new CustomEvent('noether:fsrs-updated'));
         }
         return [];
       }
@@ -224,11 +224,11 @@ export async function syncDocumentCards(
 
     await saveCardsForDocument(documentId, reconciled);
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('flint:fsrs-updated'));
+      window.dispatchEvent(new CustomEvent('noether:fsrs-updated'));
     }
     return reconciled;
   } catch (err) {
-    console.error('[Flint FSRS] Error syncing document cards:', err);
+    console.error('[Noether FSRS] Error syncing document cards:', err);
     return [];
   }
 }
@@ -261,12 +261,12 @@ export async function syncAllVaultCards(): Promise<number> {
     }
 
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('flint:fsrs-updated'));
+      window.dispatchEvent(new CustomEvent('noether:fsrs-updated'));
     }
 
     return totalCards;
   } catch (err) {
-    console.error('[Flint FSRS] Error syncing all vault cards:', err);
+    console.error('[Noether FSRS] Error syncing all vault cards:', err);
     return 0;
   }
 }

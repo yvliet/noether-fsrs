@@ -30,7 +30,7 @@
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "flint": "^0.4.0",
+    "noether": "^0.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "zod": "^3.24.2"

@@ -18,12 +18,12 @@ The **Spaced Repetition (FSRS)** extension transforms your notes into an automat
 
 ---
 
-## Architecture & Flint APIs
+## Architecture & Noether APIs
 
 This extension showcases slash command templates, status bar review counters, and global review modals.
 
 ### 1. Slash Commands Insertion
-Registers quick insertion templates into Flint's TipTap slash command menu:
+Registers quick insertion templates into Noether's TipTap slash command menu:
 
 \`\`\`tsx
 this.app.commands.registerCommand({

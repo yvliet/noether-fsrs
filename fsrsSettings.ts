@@ -38,7 +38,7 @@ export const useFsrsSettings = create<FsrsSettingsState>()(
       restoreDefaults: () => set({ ...DEFAULT_FSRS_SETTINGS }),
     }),
     {
-      name: 'flint_plugin_data_fsrs-spaced-repetition',
+      name: 'noether_extension_data_fsrs-spaced-repetition',
     }
   )
 );

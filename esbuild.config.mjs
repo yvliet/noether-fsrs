@@ -37,13 +37,13 @@ const buildOptions = {
     'zod',
     'ts-fsrs',
     'canvas-confetti',
-    'flint',
-    'flint/sdk',
-    '@flint',
-    '@flint/core',
-    '@flint/api',
-    '@flint/sdk',
-    'flint-sdk'
+    
+    
+    
+    
+    
+    
+    
   ],
   alias: {
     '@': srcDir,

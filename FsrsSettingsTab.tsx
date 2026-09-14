@@ -42,7 +42,7 @@ export const FsrsSettingsTab: React.FC = () => {
               restoreDefaults();
               showToast('Restored FSRS spaced repetition defaults', 'info');
             }}
-            className="flint-btn text-xs py-1 px-2.5 flex items-center gap-1.5"
+            className="noether-btn text-xs py-1 px-2.5 flex items-center gap-1.5"
           >
             <RotateCcwIcon size={12} />
             <span>Restore defaults</span>

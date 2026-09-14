@@ -5,7 +5,7 @@
  * Registers the flashcard modal host, action rail review launcher, sidebar cards tab,
  * status bar due counter, and card creation slash commands.
  *
- * Fully modular and decoupled from Flint native core: manages its own database tables
+ * Fully modular and decoupled from Noether native core: manages its own database tables
  * and cleans up document-associated cards via event listeners.
  *
  * @since 0.2.0
@@ -64,11 +64,11 @@ const FsrsDocCardPill: React.FC<{ docId: string; app: NoetherApp }> = ({ docId, 
       });
     };
     window.addEventListener('noether:fsrs-updated', onUpdated);
-    window.addEventListener('flint:fsrs-updated', onUpdated);
+    window.addEventListener('noether:fsrs-updated', onUpdated);
     return () => {
       mounted = false;
       window.removeEventListener('noether:fsrs-updated', onUpdated);
-      window.removeEventListener('flint:fsrs-updated', onUpdated);
+      window.removeEventListener('noether:fsrs-updated', onUpdated);
     };
   }, [docId]);
 
@@ -102,7 +102,7 @@ const FsrsDueBadgeItem: React.FC<{ app: NoetherApp }> = ({ app }) => {
     updateCount();
 
     const handleUpdateEvent = () => updateCount();
-    window.addEventListener('flint:fsrs-updated', handleUpdateEvent);
+    window.addEventListener('noether:fsrs-updated', handleUpdateEvent);
     window.addEventListener('focus', handleUpdateEvent);
 
     const unsubDocSaved = app.events.on('document:saved', handleUpdateEvent);
@@ -117,7 +117,7 @@ const FsrsDueBadgeItem: React.FC<{ app: NoetherApp }> = ({ app }) => {
     return () => {
       isMounted = false;
       clearInterval(interval);
-      window.removeEventListener('flint:fsrs-updated', handleUpdateEvent);
+      window.removeEventListener('noether:fsrs-updated', handleUpdateEvent);
       window.removeEventListener('focus', handleUpdateEvent);
       unsubDocSaved.dispose();
     };
@@ -129,7 +129,7 @@ const FsrsDueBadgeItem: React.FC<{ app: NoetherApp }> = ({ app }) => {
     <button
       onClick={() => {
         app.events.emit('editor:action', { action: 'open-fsrs-review' });
-        window.dispatchEvent(new CustomEvent('flint:open-fsrs-review'));
+        window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
       }}
       className="flex items-center gap-1 text-[#aaaaaa] hover:text-white cursor-pointer"
       title={`${dueCount} cards due for FSRS review`}
@@ -155,7 +155,7 @@ export class FsrsExtension extends Extension {
       deleteCardsForDocument(id);
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('noether:fsrs-updated'));
-        window.dispatchEvent(new CustomEvent('flint:fsrs-updated'));
+        window.dispatchEvent(new CustomEvent('noether:fsrs-updated'));
       }
     });
 
@@ -191,7 +191,7 @@ export class FsrsExtension extends Extension {
       (app) => {
         app.events.emit('editor:action', { action: 'open-fsrs-review' });
         window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
-        window.dispatchEvent(new CustomEvent('flint:open-fsrs-review'));
+        window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
       },
       70
     );
@@ -220,7 +220,7 @@ export class FsrsExtension extends Extension {
       action: (app) => {
         app.events.emit('editor:action', { action: 'open-fsrs-review' });
         window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
-        window.dispatchEvent(new CustomEvent('flint:open-fsrs-review'));
+        window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
       },
     });
 
@@ -331,7 +331,7 @@ export class FsrsExtension extends Extension {
         if (ctx.doc) {
           this.app.events.emit('editor:action', { action: 'open-fsrs-review', documentId: ctx.doc.id });
           window.dispatchEvent(new CustomEvent('noether:open-fsrs-review', { detail: { documentId: ctx.doc.id } }));
-          window.dispatchEvent(new CustomEvent('flint:open-fsrs-review', { detail: { documentId: ctx.doc.id } }));
+          window.dispatchEvent(new CustomEvent('noether:open-fsrs-review', { detail: { documentId: ctx.doc.id } }));
         }
       },
     });
@@ -407,7 +407,7 @@ export class FsrsExtension extends Extension {
         type: 'object',
         properties: {},
       },
-      handler: async (_args: Record<string, unknown>, _app: FlintApp): Promise<McpToolResult> => {
+      handler: async (_args: Record<string, unknown>, _app: NoetherApp): Promise<McpToolResult> => {
         try {
           const count = await getDueCardCount();
           return {
@@ -442,7 +442,7 @@ export class FsrsExtension extends Extension {
         },
         required: ['cardId', 'rating'],
       },
-      handler: async (args: Record<string, unknown>, _app: FlintApp): Promise<McpToolResult> => {
+      handler: async (args: Record<string, unknown>, _app: NoetherApp): Promise<McpToolResult> => {
         try {
           const cardId = args.cardId as string;
           const rating = args.rating as string;
@@ -517,7 +517,7 @@ export class FsrsExtension extends Extension {
         },
         required: ['documentId'],
       },
-      handler: async (args: Record<string, unknown>, _app: FlintApp): Promise<McpToolResult> => {
+      handler: async (args: Record<string, unknown>, _app: NoetherApp): Promise<McpToolResult> => {
         try {
           const documentId = args.documentId as string;
           if (!documentId) {

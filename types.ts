@@ -3,7 +3,7 @@
  * @description
  * Domain models and data structures for the FSRS Spaced Repetition extension.
  * Encapsulates ts-fsrs types inside the FSRS plugin module to prevent
- * external library leakage into Flint native core.
+ * external library leakage into Noether native core.
  */
 
 import type { State } from 'ts-fsrs';

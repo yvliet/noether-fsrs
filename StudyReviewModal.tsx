@@ -15,20 +15,20 @@ import { getSchedulingOptions, SchedulingOption } from './engine';
 import { useFsrsSettings } from './fsrsSettings';
 
 const FLASHCARD_STYLES = `
-  .noether-extension-flashcard-scene, .flint-plugin-flashcard-scene {
+  .noether-extension-flashcard-scene {
     perspective: 1000px;
   }
-  .noether-extension-flashcard-inner, .flint-plugin-flashcard-inner {
+  .noether-extension-flashcard-inner {
     position: relative;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .noether-extension-flashcard-inner.is-flipped, .flint-plugin-flashcard-inner.is-flipped {
+  .noether-extension-flashcard-inner.is-flipped.is-flipped {
     transform: rotateY(180deg);
   }
-  .noether-extension-flashcard-face, .flint-plugin-flashcard-face {
+  .noether-extension-flashcard-face {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -36,8 +36,8 @@ const FLASHCARD_STYLES = `
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     border-radius: 12px;
-    background-color: var(--noether-bg-card, var(--flint-bg-card, #1c1c1c));
-    border: 1px solid var(--noether-border-base, var(--flint-border-strong, #333));
+    background-color: var(--noether-bg-card, #1c1c1c);
+    border: 1px solid var(--noether-border-base, #333);
     box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
@@ -45,7 +45,7 @@ const FLASHCARD_STYLES = `
     padding: 26px 28px;
     overflow-y: auto;
   }
-  .noether-extension-flashcard-back, .flint-plugin-flashcard-back {
+  .noether-extension-flashcard-back {
     transform: rotateY(180deg);
   }
 `;
@@ -79,10 +79,10 @@ export const StudyReviewModal: React.FC = React.memo(() => {
   useEffect(() => {
     const handleOpen = () => setIsReviewModalOpen(true);
     window.addEventListener('noether:open-fsrs-review', handleOpen);
-    window.addEventListener('flint:open-fsrs-review', handleOpen);
+    window.addEventListener('noether:open-fsrs-review', handleOpen);
     return () => {
       window.removeEventListener('noether:open-fsrs-review', handleOpen);
-      window.removeEventListener('flint:open-fsrs-review', handleOpen);
+      window.removeEventListener('noether:open-fsrs-review', handleOpen);
     };
   }, [setIsReviewModalOpen]);
 
@@ -104,7 +104,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
 
     // Persist new FSRS state
     await updateCardState(option.nextCard);
-    window.dispatchEvent(new CustomEvent('flint:fsrs-updated'));
+    window.dispatchEvent(new CustomEvent('noether:fsrs-updated'));
 
     if (currentIndex + 1 < dueCards.length) {
       setCurrentIndex((prev) => prev + 1);
@@ -181,7 +181,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
               return (
                 <span
                   key={i}
-                  className="inline-block px-2 py-0.5 mx-1 rounded border border-[var(--flint-border-strong)] bg-[var(--flint-bg-input)] text-[var(--flint-accent)] text-sm font-semibold"
+                  className="inline-block px-2 py-0.5 mx-1 rounded border border-[var(--noether-border-strong)] bg-[var(--noether-bg-input)] text-[var(--noether-accent)] text-sm font-semibold"
                 >
                   [...]
                 </span>
@@ -207,7 +207,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
                 return (
                   <span
                     key={i}
-                    className="inline-block px-2 py-0.5 mx-1 rounded bg-[var(--flint-accent-subtle)] text-[var(--flint-accent)] font-semibold border border-[var(--flint-accent)]"
+                    className="inline-block px-2 py-0.5 mx-1 rounded bg-[var(--noether-accent-subtle)] text-[var(--noether-accent)] font-semibold border border-[var(--noether-accent)]"
                   >
                     {inner}
                   </span>
@@ -218,7 +218,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
                 return (
                   <span
                     key={i}
-                    className="inline-block px-2 py-0.5 mx-1 rounded bg-[var(--flint-accent-subtle)] text-[var(--flint-accent)] font-semibold border border-[var(--flint-accent)]"
+                    className="inline-block px-2 py-0.5 mx-1 rounded bg-[var(--noether-accent-subtle)] text-[var(--noether-accent)] font-semibold border border-[var(--noether-accent)]"
                   >
                     {inner}
                   </span>
@@ -228,7 +228,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
             })}
           </div>
           {card.back_text && card.back_text !== card.front_text && (
-            <div className="text-sm text-[var(--flint-text-muted)] mt-2">
+            <div className="text-sm text-[var(--noether-text-muted)] mt-2">
               {card.back_text}
             </div>
           )}
@@ -251,9 +251,9 @@ export const StudyReviewModal: React.FC = React.memo(() => {
       <style>{FLASHCARD_STYLES}</style>
 
       <div className="w-full max-w-[560px] flex flex-col items-center gap-3.5">
-        <div className="w-full h-6 flex items-center justify-between text-xs text-[var(--flint-text-muted)] px-3.5 shrink-0">
+        <div className="w-full h-6 flex items-center justify-between text-xs text-[var(--noether-text-muted)] px-3.5 shrink-0">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-[var(--flint-text-secondary)]">Flashcard</span>
+            <span className="font-medium text-[var(--noether-text-secondary)]">Flashcard</span>
             {!isLoading && !isFinished && dueCards.length > 0 && (
               <span className="opacity-80">
                 ({currentIndex + 1} of {dueCards.length})
@@ -266,7 +266,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
               <button
                 onClick={handleJumpToNote}
                 title="Jump to original note"
-                className="flex items-center gap-1 hover:text-[var(--flint-text-primary)] cursor-pointer"
+                className="flex items-center gap-1 hover:text-[var(--noether-text-primary)] cursor-pointer"
               >
                 <LinkSquare02Icon size={13} />
                 <span>Jump to note</span>
@@ -274,7 +274,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
             )}
             <button
               onClick={() => setIsReviewModalOpen(false)}
-              className="p-1 rounded hover:bg-[var(--flint-bg-card-hover)] text-[var(--flint-text-muted)] hover:text-[var(--flint-text-primary)] cursor-pointer"
+              className="p-1 rounded hover:bg-[var(--noether-bg-card-hover)] text-[var(--noether-text-muted)] hover:text-[var(--noether-text-primary)] cursor-pointer"
               title="Close (Esc)"
             >
               <Cancel01Icon size={15} />
@@ -283,70 +283,70 @@ export const StudyReviewModal: React.FC = React.memo(() => {
         </div>
 
         {isLoading ? (
-          <div className="w-full h-[320px] sm:h-[340px] rounded-xl border border-[var(--flint-border-base)] bg-[var(--flint-bg-card)] flex items-center justify-center text-xs text-[var(--flint-text-muted)] shrink-0">
+          <div className="w-full h-[320px] sm:h-[340px] rounded-xl border border-[var(--noether-border-base)] bg-[var(--noether-bg-card)] flex items-center justify-center text-xs text-[var(--noether-text-muted)] shrink-0">
             Loading flashcard queue...
           </div>
         ) : isFinished || dueCards.length === 0 ? (
-          <div className="w-full h-[320px] sm:h-[340px] rounded-xl border border-[var(--flint-border-strong)] bg-[var(--flint-bg-card)] shadow-2xl p-8 flex flex-col items-center justify-center text-center shrink-0">
-            <div className="w-12 h-12 rounded-full bg-[var(--flint-bg-card-hover)] border border-[var(--flint-border-base)] flex items-center justify-center text-[var(--flint-accent)] mb-3">
+          <div className="w-full h-[320px] sm:h-[340px] rounded-xl border border-[var(--noether-border-strong)] bg-[var(--noether-bg-card)] shadow-2xl p-8 flex flex-col items-center justify-center text-center shrink-0">
+            <div className="w-12 h-12 rounded-full bg-[var(--noether-bg-card-hover)] border border-[var(--noether-border-base)] flex items-center justify-center text-[var(--noether-accent)] mb-3">
               <SparklesIcon size={24} />
             </div>
-            <h3 className="text-lg font-semibold text-[var(--flint-text-primary)] mb-1">
+            <h3 className="text-lg font-semibold text-[var(--noether-text-primary)] mb-1">
               Review Complete!
             </h3>
-            <p className="text-xs text-[var(--flint-text-muted)] max-w-xs mb-6">
+            <p className="text-xs text-[var(--noether-text-muted)] max-w-xs mb-6">
               You have reviewed all cards due for today.
             </p>
             <button
               onClick={() => setIsReviewModalOpen(false)}
-              className="flint-btn flint-btn-primary"
+              className="noether-btn noether-btn-primary"
             >
               Back to Notes
             </button>
           </div>
         ) : (
-          <div className="w-full h-[320px] sm:h-[340px] flint-plugin-flashcard-scene cursor-pointer shrink-0">
+          <div className="w-full h-[320px] sm:h-[340px] noether-extension-flashcard-scene cursor-pointer shrink-0">
             <div
               onClick={handleFlip}
-              className={clsx('flint-plugin-flashcard-inner', isRevealed && 'is-flipped')}
+              className={clsx('noether-extension-flashcard-inner', isRevealed && 'is-flipped')}
             >
-              <div className="flint-plugin-flashcard-face">
-                <div className="flex items-center justify-between text-[11px] text-[var(--flint-text-muted)]">
+              <div className="noether-extension-flashcard-face">
+                <div className="flex items-center justify-between text-[11px] text-[var(--noether-text-muted)]">
                   <span>{currentCard.card_type.replace(/_/g, ' ').toLowerCase()}</span>
                   <span className="text-[10px] opacity-75">
                     {currentCard.reps > 0 ? `rep #${currentCard.reps}` : 'new'}
                   </span>
                 </div>
 
-                <div className="my-auto py-2 text-xl sm:text-2xl font-serif text-[var(--flint-text-primary)] text-center leading-relaxed">
+                <div className="my-auto py-2 text-xl sm:text-2xl font-serif text-[var(--noether-text-primary)] text-center leading-relaxed">
                   {renderFrontCardContent(currentCard)}
                 </div>
 
-                <div className="flex items-center justify-center gap-1.5 text-xs text-[var(--flint-text-muted)]">
+                <div className="flex items-center justify-center gap-1.5 text-xs text-[var(--noether-text-muted)]">
                   <RotateCcwIcon size={12} />
                   <span>click or press space to flip</span>
                 </div>
               </div>
 
-              <div className="flint-plugin-flashcard-face flint-plugin-flashcard-back">
-                <div className="flex items-center justify-between text-[11px] text-[var(--flint-text-muted)]">
+              <div className="noether-extension-flashcard-face noether-extension-flashcard-back">
+                <div className="flex items-center justify-between text-[11px] text-[var(--noether-text-muted)]">
                   <span>answer</span>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleFlip();
                     }}
-                    className="text-[10px] text-[var(--flint-text-muted)] hover:text-[var(--flint-text-primary)] flex items-center gap-1"
+                    className="text-[10px] text-[var(--noether-text-muted)] hover:text-[var(--noether-text-primary)] flex items-center gap-1"
                   >
                     <RotateCcwIcon size={11} /> flip back
                   </button>
                 </div>
 
-                <div className="my-auto py-2 text-xl sm:text-2xl font-serif text-[var(--flint-text-primary)] text-center leading-relaxed">
+                <div className="my-auto py-2 text-xl sm:text-2xl font-serif text-[var(--noether-text-primary)] text-center leading-relaxed">
                   {renderBackCardContent(currentCard)}
                 </div>
 
-                <div className="flex items-center justify-center text-xs text-[var(--flint-text-muted)]">
+                <div className="flex items-center justify-center text-xs text-[var(--noether-text-muted)]">
                   <span>rate your recall difficulty below</span>
                 </div>
               </div>
@@ -363,13 +363,13 @@ export const StudyReviewModal: React.FC = React.memo(() => {
                   <button
                     key={opt.rating}
                     onClick={() => handleRate(opt)}
-                    className="flint-btn h-full flex flex-col items-center justify-center py-1 px-1 text-center"
+                    className="noether-btn h-full flex flex-col items-center justify-center py-1 px-1 text-center"
                   >
-                    <div className="flex items-center gap-1 font-semibold text-xs text-[var(--flint-text-primary)] leading-tight">
+                    <div className="flex items-center gap-1 font-semibold text-xs text-[var(--noether-text-primary)] leading-tight">
                       <span>{opt.label}</span>
-                      <span className="text-[10px] text-[var(--flint-text-muted)]">({hotkey})</span>
+                      <span className="text-[10px] text-[var(--noether-text-muted)]">({hotkey})</span>
                     </div>
-                    <div className="text-[10px] text-[var(--flint-text-muted)] leading-tight">
+                    <div className="text-[10px] text-[var(--noether-text-muted)] leading-tight">
                       {opt.intervalText}
                     </div>
                   </button>
