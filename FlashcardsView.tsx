@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useDocumentStore } from '@/store/documentStore';
 import { useWorkspaceStore } from '@/store/workspaceStore';
 import { Brain02Icon, Search01Icon, HelpCircleIcon, RotateCcwIcon, SparklesIcon } from '@/components/common/Icons';
+import { SidebarActionButton } from '@/components/common/SidebarActionHeader';
 import { getCardsForDocument, getDueCardCount, syncDocumentCards } from './fsrsDb';
 import { FSRSCardRecord } from './types';
 
@@ -86,19 +87,16 @@ export const FlashcardsView: React.FC = React.memo(() => {
           <span className="text-[10px] text-[var(--noether-text-faint)] font-mono">({cardsInNote.length})</span>
         </div>
 
-        <div className="flex items-center gap-1">
-          <button
+        <div className="flex items-center gap-0.5">
+          <SidebarActionButton
             onClick={() => {
               setIsSearchOpen(!isSearchOpen);
               if (isSearchOpen) setSearchQuery('');
             }}
+            isActive={isSearchOpen}
             title={isSearchOpen ? 'Close search' : 'Search flashcards'}
-            className={`p-1 rounded hover:bg-[var(--noether-bg-card-hover)] ${
-              isSearchOpen ? 'text-[var(--noether-text-primary)] bg-[var(--noether-bg-card-hover)]' : 'text-[var(--noether-text-muted)] hover:text-[var(--noether-text-primary)]'
-            }`}
-          >
-            <Search01Icon size={13} />
-          </button>
+            icon={<Search01Icon size={16} />}
+          />
         </div>
       </div>
 
