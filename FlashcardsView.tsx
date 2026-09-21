@@ -105,7 +105,7 @@ export const FlashcardsView: React.FC = React.memo(() => {
         <div className="p-2.5 pb-1.5">
           <button
             onClick={() => setIsReviewModalOpen(true)}
-            className="w-full py-2 px-3 rounded-lg border border-[var(--noether-border-base)] hover:border-[var(--noether-border-strong)] bg-[var(--noether-bg-card)] hover:bg-[var(--noether-bg-card-hover)] flex items-center justify-between text-left cursor-pointer"
+            className="w-full py-2 px-3 rounded-lg border border-[var(--noether-border-base)] hover:border-[var(--noether-border-strong)] bg-[var(--noether-bg-card)] hover:bg-[var(--noether-bg-card-hover)] flex items-center justify-between text-left"
           >
             <div className="flex items-center gap-2">
               <SparklesIcon size={14} className="text-[var(--noether-accent)]" />
@@ -157,7 +157,7 @@ export const FlashcardsView: React.FC = React.memo(() => {
               <button
                 key={f.id}
                 onClick={() => setFilterType(f.id as any)}
-                className={`px-2.5 py-0.5 rounded-[5px] text-[11px] cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.35)] ${
+                className={`px-2.5 py-0.5 rounded-[5px] text-[11px] shadow-[0_1px_2px_rgba(0,0,0,0.35)] ${
                   isSelected
                     ? 'bg-[var(--noether-accent)] text-white font-semibold border border-black/20'
                     : 'bg-[#252525] hover:bg-[#2e2e2e] text-[#999] hover:text-white border border-[#383838] hover:border-[#484848] font-medium'
@@ -194,7 +194,7 @@ export const FlashcardsView: React.FC = React.memo(() => {
               <div
                 key={card.id}
                 onClick={() => toggleCardFlip(card.id)}
-                className="p-2.5 rounded-lg bg-[var(--noether-bg-card)] border border-[var(--noether-border-base)] hover:border-[var(--noether-border-strong)] flex flex-col gap-1.5 cursor-pointer group"
+                className="p-2.5 rounded-lg bg-[var(--noether-bg-card)] border border-[var(--noether-border-base)] hover:border-[var(--noether-border-strong)] flex flex-col gap-1.5 group"
               >
                 <div className="flex items-center justify-between text-[10px]">
                   <span className="font-semibold uppercase tracking-wider text-[var(--noether-text-muted)] flex items-center gap-1">

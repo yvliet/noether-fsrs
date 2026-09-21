@@ -80,7 +80,7 @@ const FsrsDocCardPill: React.FC<{ docId: string; app: NoetherApp }> = ({ docId, 
         app.events.emit('editor:action', { action: 'open-fsrs-review', documentId: docId });
         window.dispatchEvent(new CustomEvent('noether:open-fsrs-review', { detail: { documentId: docId } }));
       }}
-      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--noether-btn-hover-bg)] text-[var(--noether-text-primary)] border border-[var(--noether-border-subtle)] cursor-pointer select-none hover:bg-[var(--noether-btn-active-bg)]"
+      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--noether-btn-hover-bg)] text-[var(--noether-text-primary)] border border-[var(--noether-border-subtle)] select-none hover:bg-[var(--noether-btn-active-bg)]"
       title={`${count} flashcard${count === 1 ? '' : 's'} in note (click to study)`}
     >
       <Brain02Icon size={11} className="text-pink-500" />
@@ -131,7 +131,7 @@ const FsrsDueBadgeItem: React.FC<{ app: NoetherApp }> = ({ app }) => {
         app.events.emit('editor:action', { action: 'open-fsrs-review' });
         window.dispatchEvent(new CustomEvent('noether:open-fsrs-review'));
       }}
-      className="flex items-center gap-1 text-[#aaaaaa] hover:text-white cursor-pointer"
+      className="flex items-center gap-1 text-[#aaaaaa] hover:text-white"
       title={`${dueCount} cards due for FSRS review`}
     >
       <Brain02Icon size={12} />

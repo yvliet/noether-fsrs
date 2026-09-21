@@ -266,7 +266,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
               <button
                 onClick={handleJumpToNote}
                 title="Jump to original note"
-                className="flex items-center gap-1 hover:text-[var(--noether-text-primary)] cursor-pointer"
+                className="flex items-center gap-1 hover:text-[var(--noether-text-primary)]"
               >
                 <LinkSquare02Icon size={13} />
                 <span>Jump to note</span>
@@ -274,7 +274,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
             )}
             <button
               onClick={() => setIsReviewModalOpen(false)}
-              className="p-1 rounded hover:bg-[var(--noether-bg-card-hover)] text-[var(--noether-text-muted)] hover:text-[var(--noether-text-primary)] cursor-pointer"
+              className="p-1 rounded hover:bg-[var(--noether-bg-card-hover)] text-[var(--noether-text-muted)] hover:text-[var(--noether-text-primary)]"
               title="Close (Esc)"
             >
               <Cancel01Icon size={15} />
@@ -305,7 +305,7 @@ export const StudyReviewModal: React.FC = React.memo(() => {
             </button>
           </div>
         ) : (
-          <div className="w-full h-[320px] sm:h-[340px] noether-extension-flashcard-scene cursor-pointer shrink-0">
+          <div className="w-full h-[320px] sm:h-[340px] noether-extension-flashcard-scene shrink-0">
             <div
               onClick={handleFlip}
               className={clsx('noether-extension-flashcard-inner', isRevealed && 'is-flipped')}

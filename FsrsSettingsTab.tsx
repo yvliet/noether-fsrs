@@ -65,7 +65,7 @@ export const FsrsSettingsTab: React.FC = () => {
                 type="button"
                 onClick={() => setFsrsRetention(DEFAULT_FSRS_SETTINGS.fsrsRetention)}
                 title="Restore default retention (90%)"
-                className="p-1 rounded-md text-[#777] hover:text-white hover:bg-[#282828] transition-colors cursor-pointer shrink-0 flex items-center justify-center"
+                className="p-1 rounded-md text-[#777] hover:text-white hover:bg-[#282828] shrink-0 flex items-center justify-center"
               >
                 <RotateCcwIcon size={13} />
               </button>
@@ -97,7 +97,7 @@ export const FsrsSettingsTab: React.FC = () => {
                 type="button"
                 onClick={() => setFsrsMaxInterval(DEFAULT_FSRS_SETTINGS.fsrsMaxInterval)}
                 title="Restore default max interval (36500 days)"
-                className="p-1 rounded-md text-[#777] hover:text-white hover:bg-[#282828] transition-colors cursor-pointer shrink-0 flex items-center justify-center"
+                className="p-1 rounded-md text-[#777] hover:text-white hover:bg-[#282828] shrink-0 flex items-center justify-center"
               >
                 <RotateCcwIcon size={13} />
               </button>
@@ -106,7 +106,7 @@ export const FsrsSettingsTab: React.FC = () => {
               type="number"
               value={fsrsMaxInterval}
               onChange={(e) => setFsrsMaxInterval(e.target.value)}
-              className="w-28 bg-[#181818] border border-[#383838] focus:border-[#555] text-white text-xs rounded-[5px] px-3 py-1.5 outline-none font-mono shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)] transition-colors"
+              className="w-28 bg-[#181818] border border-[#383838] focus:border-[#555] text-white text-xs rounded-[5px] px-3 py-1.5 outline-none font-mono shadow-[inset_0_1px_2px_rgba(0,0,0,0.35)]"
             />
           </div>
         </div>
